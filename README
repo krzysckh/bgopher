@@ -1,0 +1,17 @@
+bgopher
+-------
+
+a gopher client written in freebasic.
+
+REQUIREMENTS
+  - freebasic compiler (https://www.freebasic.net)
+
+INSTALLATION
+  $ ./build.sh
+  $ sudo ./build.sh install
+
+AUTHOR
+  krzysckh 2023 <kpm@linux.pl>
+
+LICENSE
+  see ./LICENSE
