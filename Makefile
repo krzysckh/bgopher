@@ -43,3 +43,5 @@ target: ${OFILES}
 clean:
 	rm -rf *.o *.c ${TARGET}
 all: target
+install:
+	@echo "please don't install me yet. i'm very unfinished"

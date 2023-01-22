@@ -100,7 +100,7 @@ end function
 
 function main as integer
   ui_init
-  dim as page ptr p = parse(g_get("gopher.floodgap.com", "/", "70"))
+  dim as page ptr p = parse(g_get(command(1), "/", "70"))
 
   ui_run(p)
 

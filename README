@@ -1,6 +1,8 @@
 bgopher
 -------
 
+[ work in progress ]
+
 a gopher client written in freebasic.
 
 REQUIREMENTS
@@ -12,7 +14,7 @@ INSTALLATION
   # make install
 
 AUTHOR
-  krzysckh 2023 <kpm@linux.pl>
+  krzysckh 2023 <kpm at linux dot pl>
 
 LICENSE
   see ./LICENSE

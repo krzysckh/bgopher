@@ -1,6 +1,11 @@
 #include "bgopher.bi"
 
 #include "curses.bi"
+#include "crt/stdio.bi"
+
+function basename(s as string) as string
+  return right(s, len(s) - instrrev(s, "/"))
+end function
 
 sub ui_init
   dim as integer row, col
@@ -60,6 +65,12 @@ function link_handler(o as obj ptr) as integer
 
     case binhex, dosf, uuf, binf, gif, image, bitmap, movie, audio, document, _
          html, pngimage, rtffile, wavfile, pdffile, xmlfile:
+      dim as string dat = g_get(o->hostname, o->selector, o->port)
+      dim as FILE ptr f = fopen(TEMP_FOLDER & "bgoph-downl-" & _
+        basename(o->selector), "w")
+      fwrite(strptr(dat), 1, len(dat), f)
+      fclose(f)
+      exec(ANY_HANDLER, TEMP_FOLDER & "bgoph-downl-" & basename(o->selector))
 
 
     case nameserver:
