@@ -78,7 +78,7 @@ sub ui_run(p as page ptr)
   next
 
 drawp:
-  clear_()
+  'clear_()
   for i as integer = 0 to p->sz
     mvprintw(y, x, t_str(p->l(i).t))
     if @(p->l(i)) = curs then attron(A_UNDERLINE)
@@ -105,6 +105,7 @@ drawp:
       ui_end
       end 0
     case !"\n"
+      clear_()
       link_handler(curs)
   end select
 
