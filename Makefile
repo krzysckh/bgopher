@@ -8,14 +8,14 @@ TARGET=bgopher
 MAIN=bgopher
 BASFILES=client.bas bgopher.bas ui.bas
 OFILES=client.o bgopher.o ui.o
-BCFLAGS=-lang fb
+BCFLAGS=-lang fb -g
 BLFLAGS=
 
 .if ${OS} == "openbsd"
 CC=clang
-CFLAGS=-w
+CFLAGS=-w -g
 LDFLAGS=-L/usr/local/lib -L/usr/local/lib/freebasic/openbsd-x86_64/ -lfb \
-	-lpthread -lcurses
+	-lpthread -lcurses -lm
 .endif
 
 .bas.o:
@@ -41,6 +41,6 @@ target: ${OFILES}
 	@${CC} ${LDFLAGS} -o ${TARGET} ${OFILES}
 .endif
 
-all: target
 clean:
 	rm -rf *.o *.c ${TARGET}
+all: target

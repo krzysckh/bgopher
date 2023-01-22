@@ -72,7 +72,8 @@ function parse(text as string) as page ptr
     ret->l(i).hostname = left(lines(i), instr(lines(i), !"\t") - 1)
     lines(i) = right(lines(i), len(lines(i)) - instr(lines(i), !"\t"))
 
-    ret->l(i).port = valint(lines(i))
+    ret->l(i).port = right(lines(i), len(lines(i)) - instr(lines(i), !"\n"))
+    if len(ret->l(i).port) = 0 then ret->l(i).port = "70"
   next
 
   ret->sz = nl
@@ -81,17 +82,10 @@ function parse(text as string) as page ptr
 end function
 
 function main as integer
-  dim as page ptr p = parse(g_get("suckless.org", "/"))
-
-  'for i as integer = 0 to p->sz
-    'print p->l(i).hostname
-  'next
-
   ui_init
+  dim as page ptr p = parse(g_get("suckless.org", "/", "70"))
 
-  'do
-    'print p
-  'loop while (not ui_render)
+  ui_run(p)
 
   ui_end
   return 0

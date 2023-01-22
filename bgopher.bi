@@ -31,7 +31,7 @@ type obj
   display as string
   selector as string
   hostname as string
-  port as integer
+  port as string
 end type
 
 type page
@@ -39,6 +39,9 @@ type page
   sz as integer
 end type
 
-declare function g_get(addr as string, file as string) as string
+declare function parse(text as string) as page ptr
+declare function g_get(addr as string, file as string, port as string) as string
+
+declare sub ui_run(p as page ptr)
 declare sub ui_init
 declare sub ui_end

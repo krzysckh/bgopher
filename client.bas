@@ -2,10 +2,10 @@
 #include "crt/string.bi"
 #include "crt/netdb.bi"
 
-function g_get(addr as string, file as string) as string
+function g_get(addr as string, file as string, port as string) as string
   dim hints as addrinfo
   dim res as addrinfo ptr
-  dim as integer sockfd, bytec, f_bytec
+  dim as integer sockfd = 0, bytec = 0, f_bytec = 0
   dim as string header = file & !"\n"
   dim buf as string * 1024
   dim full as string
@@ -16,7 +16,7 @@ function g_get(addr as string, file as string) as string
   hints.ai_family = AF_UNSPEC
   hints.ai_socktype = SOCK_STREAM
 
-  getaddrinfo(addr, "70", @hints, @res)
+  getaddrinfo(addr, port, @hints, @res)
   sockfd = socket_(PF_INET, SOCK_STREAM, IPPROTO_TCP)
   ' no clue why socket() doesn't work
   ' it's an alias, but i have no idea what does that mean
