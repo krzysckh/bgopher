@@ -5,10 +5,11 @@ a gopher client written in freebasic.
 
 REQUIREMENTS
   - freebasic compiler (https://www.freebasic.net)
+  - BSD make (https://www.crufty.net/help/sjg/bmake.html)
 
 INSTALLATION
-  $ ./build.sh
-  $ sudo ./build.sh install
+  $ make
+  # make install
 
 AUTHOR
   krzysckh 2023 <kpm@linux.pl>
