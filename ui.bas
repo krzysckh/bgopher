@@ -52,8 +52,12 @@ end function
 
 function link_handler(o as obj ptr) as integer
   select case o->t
-    case text_file, submenu:
+    case submenu:
       ui_run(parse(g_get(o->hostname, o->selector, o->port)))
+
+    case text_file:
+      ui_run(t_pseudoparse(g_get(o->hostname, o->selector, o->port)))
+
     case binhex, dosf, uuf, binf, gif, image, bitmap, movie, audio, document, _
          html, pngimage, rtffile, wavfile, pdffile, xmlfile:
 
@@ -69,17 +73,21 @@ function link_handler(o as obj ptr) as integer
 end function
 
 sub ui_run(p as page ptr)
-  dim as integer x = 0, y = 0, cur = 0
+  dim as integer x = 0, y = 0, cur = 0, maxx, maxy, start = 0
   dim as obj ptr curs = @(p->l(0))
   dim as string c
 
-  for i as integer = 0 to p->sz
-    if len(p->l(i).display) = 0 then p->l(i).display = " "
-  next
+  getmaxyx(stdscr, maxy, maxx)
+
+  'for i as integer = 0 to p->sz
+    'if len(p->l(i).display) = 0 then p->l(i).display = " "
+  'next
 
 drawp:
   'clear_()
-  for i as integer = 0 to p->sz
+  for i as integer = start to p->sz
+    'if y > maxy then goto ref
+
     mvprintw(y, x, t_str(p->l(i).t))
     if @(p->l(i)) = curs then attron(A_UNDERLINE)
     mvprintw(y, x + 7, "%s", p->l(i).display)
@@ -87,26 +95,40 @@ drawp:
     y = y + 1
   next
 
+ref:
   refresh()
   c = wchr(getch())
 
   select case c
     case "j":
-      if cur < p->sz then
+      if curs <> @(p->l(p->sz)) then
         curs += 1
         cur  += 1
+        if cur > maxy then
+          start += maxy / 2
+          cur -= maxy / 2
+          clear_()
+        end if
       end if
     case "k":
-      if cur > 0 then
+      if cur > 0 or (start > 0 and cur >= 0) then
         curs -= 1
         cur  -= 1
+        if cur < 0 then
+          clear_()
+          start -= 1
+          cur += 1
+        end if
       end if
     case "q":
       ui_end
       end 0
-    case !"\n"
+    case !"\n", "l":
       clear_()
       link_handler(curs)
+    case "h":
+      clear_()
+      return
   end select
 
   y = 0

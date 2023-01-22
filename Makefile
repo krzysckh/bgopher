@@ -1,5 +1,4 @@
-OS=`uname | tr '[A-Z]' '[a-z]'`
-OS=openbsd
+OS != uname | tr '[A-Z]' '[a-z]'
 
 .SUFFIXES: .bas .o
 
@@ -21,7 +20,7 @@ LDFLAGS=-L/usr/local/lib -L/usr/local/lib/freebasic/openbsd-x86_64/ -lfb \
 .bas.o:
 .if ${OS} == "linux"
 	@echo "  [FBC]    $<"
-	${FBC} ${BCFLAGS} -m ${MAIN} -c $<
+	@${FBC} ${BCFLAGS} -m ${MAIN} -c $<
 .elif ${OS} == "openbsd"
 	@echo "  [FBC]    $<"
 	@${FBC} -gen gcc -r $< -m ${MAIN}
@@ -34,8 +33,8 @@ LDFLAGS=-L/usr/local/lib -L/usr/local/lib/freebasic/openbsd-x86_64/ -lfb \
 
 target: ${OFILES}
 .if ${OS} == "linux"
-	@echo "  [FBLD]   $OFILES"
-	${FBC} -x ${TARGET} ${BLFLAGS} ${OFILES}
+	@echo "  [FBLD]   ${OFILES}"
+	@${FBC} -x ${TARGET} ${BLFLAGS} ${OFILES}
 .elif ${OS} == "openbsd"
 	@echo "  [CCLD]   ${OFILES}"
 	@${CC} ${LDFLAGS} -o ${TARGET} ${OFILES}

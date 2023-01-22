@@ -40,6 +40,7 @@ type page
 end type
 
 declare function parse(text as string) as page ptr
+declare function t_pseudoparse(text as string) as page ptr
 declare function g_get(addr as string, file as string, port as string) as string
 
 declare sub ui_run(p as page ptr)

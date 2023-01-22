@@ -12,6 +12,23 @@ function getnl(text as string) as integer
   return nl
 end function
 
+function t_pseudoparse(text as string) as page ptr
+  dim as integer nl = getnl(text)
+  dim lines(nl) as string
+  dim as page ptr ret = new page
+
+  redim as obj ret->l(nl)
+
+  for i as integer = 0 to nl
+    ret->l(i).display = left(text, instr(text, !"\n") - 1)
+    text = right(text, len(text) - instr(text, !"\n"))
+    ret->l(i).t = info
+  next
+  ret->sz = nl
+
+  return ret
+end function
+
 function parse(text as string) as page ptr
   dim as integer nl = getnl(text)
   dim lines(nl) as string
