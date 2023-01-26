@@ -5,8 +5,8 @@ OS != uname | tr '[A-Z]' '[a-z]'
 FBC=fbc
 TARGET=bgopher
 MAIN=bgopher
-BASFILES=client.bas bgopher.bas ui.bas
-OFILES=client.o bgopher.o ui.o
+BASFILES=client.bas bgopher.bas ui.bas uri.bas
+OFILES=client.o bgopher.o ui.o uri.o
 BCFLAGS=-lang fb -g
 BLFLAGS=
 
@@ -14,7 +14,7 @@ BLFLAGS=
 CC=clang
 CFLAGS=-w -g
 LDFLAGS=-L/usr/local/lib -L/usr/local/lib/freebasic/openbsd-x86_64/ -lfb \
-	-lpthread -lcurses -lm
+	-lpthread -lcurses -lm -ltre
 .endif
 
 .bas.o:
@@ -41,7 +41,7 @@ target: ${OFILES}
 .endif
 
 clean:
-	rm -rf *.o *.c ${TARGET}
+	rm -rf *.o *.c ${TARGET} *.core
 all: target
 install:
 	@echo "please don't install me yet. i'm very unfinished"

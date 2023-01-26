@@ -99,11 +99,22 @@ function parse(text as string) as page ptr
 end function
 
 function main as integer
+  dim as string arg = command(1)
+  dim as uri_t ptr u
+
+  if arg = "" then arg = "gopher.floodgap.com"
+
+  u = parseuri(arg)
+
+  if u->port = "-1" then
+    print "invalid uri"
+    end 0
+  end if
+
+  dim as page ptr p = parse(g_get(u->hostname, u->file, u->port))
+
   ui_init
-  dim as page ptr p = parse(g_get(command(1), "/", "70"))
-
   ui_run(p)
-
   ui_end
   return 0
 end function

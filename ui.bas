@@ -9,21 +9,64 @@ end function
 
 sub ui_init
   dim as integer row, col
-  'dim as chtype ls = asc("│"), rs = asc("│"), ts = asc("─"), bs = asc("─")
-  'dim as chtype tl = asc("┌"), tr = asc("┐"), bl = asc("└"), br = asc("┘")
-
   initscr()
   cbreak()
   noecho()
   keypad(stdscr, true)
-  curs_set(0)
 
-  'border(ls, rs, ts, bs, tl, tr, bl, br)
+  if has_colors() then
+    start_color()
+    use_default_colors()
+  end if
+
+  curs_set(0)
 end sub
 
 sub ui_end
   endwin()
 end sub
+
+' doesn't handle <<anything>> well
+function get_input(prompt as string) as string
+  dim as string ret
+  dim as integer x, y, maxx, maxy
+  dim as ulong c
+
+  getmaxyx(stdscr, maxy, maxx)
+  y = maxy - 2
+
+  attron(A_REVERSE)
+  mvprintw(y, 0, "% *s", maxx, " ")
+  ' sorry
+  x = 0
+
+  do while (chr(c) <> !"\n")
+    if len(ret) = 0 then
+      mvprintw(y, 0, "%s", prompt)
+    else
+      mvprintw(y, x, "% *s", x + 10, " ")
+    end if
+
+    c = getch()
+    if c = KEY_BACKSPACE then
+      if len(ret) > 0 then
+        ret = left(ret, len(ret) - 1)
+        x -= 1
+        mvprintw(y, x, " ")
+      end if
+    else
+      ret = ret & chr(c)
+      mvprintw(y, x, "%c", c)
+      x += 1
+    end if
+    'mvprintw(0, 0, "x = %d, len = %d, %s", x, len(ret), ret)
+
+  loop
+  ret = left(ret, len(ret) - 1)
+
+  attroff(A_REVERSE)
+  return ret
+end function
 
 function t_str (t as line_t) as string
   select case t
@@ -55,7 +98,7 @@ function t_str (t as line_t) as string
   end select
 end function
 
-function link_handler(o as obj ptr) as integer
+sub link_handler(o as obj ptr)
   select case o->t
     case submenu:
       ui_run(parse(g_get(o->hostname, o->selector, o->port)))
@@ -81,7 +124,7 @@ function link_handler(o as obj ptr) as integer
     case info      :
     case unknown   :
   end select
-end function
+end sub
 
 sub ui_run(p as page ptr)
   dim as integer x = 0, y = 0, cur = 0, maxx, maxy, start = 0
@@ -90,12 +133,12 @@ sub ui_run(p as page ptr)
 
   getmaxyx(stdscr, maxy, maxx)
 
-  'for i as integer = 0 to p->sz
-    'if len(p->l(i).display) = 0 then p->l(i).display = " "
-  'next
+  for i as integer = 0 to p->sz
+    if len(p->l(i).display) = 0 then p->l(i).display = " "
+  next
 
+  clear_()
 drawp:
-  'clear_()
   for i as integer = start to p->sz
     'if y > maxy then goto ref
 
@@ -137,6 +180,10 @@ ref:
     case !"\n", "l":
       clear_()
       link_handler(curs)
+    case "g":
+      dim as uri_t ptr uri = parseuri(get_input("[enter url]"))
+      if uri->hostname <> "-1" then _
+        ui_run(parse(g_get(uri->hostname, uri->file, uri->port)))
     case "h":
       clear_()
       return

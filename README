@@ -7,11 +7,23 @@ a gopher client written in freebasic.
 
 REQUIREMENTS
   - freebasic compiler (https://www.freebasic.net)
+  - tre library (http://laurikari.net/tre/)
   - BSD make (https://www.crufty.net/help/sjg/bmake.html)
 
 INSTALLATION
   $ make
   # make install
+
+USAGE
+  $ bgopher
+or
+  $ bgopher [gopher://]example.com[:70][/path/]
+
+KEYBINDINGS
+  j       - down
+  k       - up
+  enter/l - open item
+  g       - enter url
 
 AUTHOR
   krzysckh 2023 <kpm at linux dot pl>

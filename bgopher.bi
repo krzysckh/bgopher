@@ -28,21 +28,28 @@ end enum
 
 type obj
   t as line_t
-  display as string
+  display  as string
   selector as string
   hostname as string
-  port as string
+  port     as string
 end type
 
 type page
-  l(any) as obj
-  sz as integer
+  l(any)   as obj
+  sz       as integer
+end type
+
+type uri_t
+  file     as string
+  hostname as string
+  port     as string
 end type
 
 declare function parse(text as string) as page ptr
 declare function t_pseudoparse(text as string) as page ptr
 declare function g_get(addr as string, file as string, port as string) as string
 declare function basename(s as string) as string
+declare function parseuri(byval s as string) as uri_t ptr
 
 declare sub ui_run(p as page ptr)
 declare sub ui_init
