@@ -146,6 +146,10 @@ drawp:
     if @(p->l(i)) = curs then attron(A_UNDERLINE)
     mvprintw(y, x + 7, "%s", p->l(i).display)
     if @(p->l(i)) = curs then attroff(A_UNDERLINE)
+
+      ' fill the line with nothing :^)
+    mvprintw(y, x + 7 + len(p->l(i).display), "% *s", _
+      maxx - x - 7 -len(p->l(i).display) , " ")
     y = y + 1
   next
 
@@ -169,7 +173,7 @@ ref:
         curs -= 1
         cur  -= 1
         if cur < 0 then
-          clear_()
+          'clear_()
           start -= 1
           cur += 1
         end if
