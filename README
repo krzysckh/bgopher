@@ -23,7 +23,9 @@ KEYBINDINGS
   j       - down
   k       - up
   enter/l - open item
+  h       - go back/exit
   g       - enter url
+  q       - exit
 
 AUTHOR
   krzysckh 2023 <kpm at linux dot pl>

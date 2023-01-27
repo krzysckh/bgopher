@@ -26,6 +26,14 @@ enum line_t
   unknown
 end enum
 
+enum info_t
+  info_normal
+  info_warning
+  info_critical
+
+  defaultcolor
+end enum
+
 type obj
   t as line_t
   display  as string

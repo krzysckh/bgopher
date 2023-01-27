@@ -19,11 +19,27 @@ sub ui_init
     use_default_colors()
   end if
 
+  'init_pair(info_normal, COLOR_BLACK, COLOR_WHITE)
+  init_pair(info_normal, COLOR_WHITE, COLOR_BLACK)
+  init_pair(info_warning, COLOR_BLACK, COLOR_YELLOW)
+  init_pair(info_critical, COLOR_BLACK, COLOR_RED)
+  init_pair(defaultcolor, COLOR_WHITE, COLOR_BLACK)
+
   curs_set(0)
 end sub
 
 sub ui_end
   endwin()
+end sub
+
+sub inform(s as string, t as info_t)
+  dim as integer x, y
+  getmaxyx(stdscr, y, x)
+
+  attron(COLOR_PAIR(t))
+  mvprintw(0, x - len(s), "%s", s)
+  attroff(COLOR_PAIR(t))
+
 end sub
 
 ' doesn't handle <<anything>> well
@@ -108,6 +124,10 @@ sub link_handler(o as obj ptr)
 
     case binhex, dosf, uuf, binf, gif, image, bitmap, movie, audio, document, _
          html, pngimage, rtffile, wavfile, pdffile, xmlfile:
+      inform("downloading " & basename(o->selector) & " to " & _
+          TEMP_FOLDER & "bgoph-downl-" & basename(o->selector), info_normal)
+      refresh()
+
       dim as string dat = g_get(o->hostname, o->selector, o->port)
       dim as FILE ptr f = fopen(TEMP_FOLDER & "bgoph-downl-" & _
         basename(o->selector), "w")
@@ -116,11 +136,11 @@ sub link_handler(o as obj ptr)
       exec(ANY_HANDLER, TEMP_FOLDER & "bgoph-downl-" & basename(o->selector))
 
 
-    case nameserver:
-    case ecode     :
-    case fulltexts :
-    case telnet    :
-    case mirror    :
+    case nameserver, ecode, fulltexts, telnet, mirror:
+      inform("unsupported", info_warning)
+      refresh()
+      sleep(1000)
+
     case info      :
     case unknown   :
   end select
@@ -185,9 +205,13 @@ ref:
       clear_()
       link_handler(curs)
     case "g":
-      dim as uri_t ptr uri = parseuri(get_input("[enter url]"))
-      if uri->hostname <> "-1" then _
+      dim as string s = get_input("[enter url]")
+      dim as uri_t ptr uri = parseuri(s)
+      if uri->hostname <> "-1" then
         ui_run(parse(g_get(uri->hostname, uri->file, uri->port)))
+      else
+        inform("invalid uri: " & s, info_critical)
+      end if
     case "h":
       clear_()
       return
