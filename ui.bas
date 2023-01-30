@@ -136,7 +136,11 @@ sub link_handler(o as obj ptr)
       exec(ANY_HANDLER, TEMP_FOLDER & "bgoph-downl-" & basename(o->selector))
 
 
-    case nameserver, ecode, fulltexts, telnet, mirror:
+    case fulltexts:
+      ui_run(parse(g_get(o->hostname, o->selector & "?" & _
+        get_input("[query]"), o->port)))
+
+    case nameserver, ecode, telnet, mirror:
       inform("unsupported", info_warning)
       refresh()
       sleep(1000)
@@ -202,7 +206,6 @@ ref:
       ui_end
       end 0
     case !"\n", "l":
-      clear_()
       link_handler(curs)
     case "g":
       dim as string s = get_input("[enter url]")
